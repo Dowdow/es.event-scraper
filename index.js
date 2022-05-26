@@ -11,6 +11,8 @@ const dev = process.env.DEV;
     return;
   }
 
+  console.log(places);
+
   const browser = await puppeteer.launch({ headless: dev === '0' });
   const page = await browser.newPage();
 
@@ -26,7 +28,9 @@ const dev = process.env.DEV;
     await page.waitForTimeout(1000);
     await autoScrollUpcomingEvents(page);
     const events = await retrieveEventsData(page);
-    await postEvent(p.id, events);
+    if (events.length > 0) {
+      await postEvent(p.id, events);
+    }
   }
 
   await browser.close();
@@ -52,6 +56,9 @@ async function autoScrollUpcomingEvents(page) {
   await page.evaluate(async () => {
     await new Promise((resolve) => {
       const upcomingEventsDiv = document.getElementById('upcoming_events_card');
+      if (upcomingEventsDiv === null) {
+        resolve();
+      }
       let divHeigth = upcomingEventsDiv.scrollHeight;
       let sameHeigthTimes = 0;
 

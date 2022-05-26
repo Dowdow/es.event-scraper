@@ -22,9 +22,11 @@ async function postEvent(place, events) {
   return new Promise(async (resolve) => {
     try {
       const httpsAgent = new https.Agent({ rejectUnauthorized: dev === '0' });
-      await axios.post(eventsUrl, { place, events }, { httpsAgent, headers: { 'X-AUTH-TOKEN': apiToken } });
+      const response = await axios.post(eventsUrl, { place, events }, { httpsAgent, headers: { 'X-AUTH-TOKEN': apiToken } });
+      console.log(response.data);
       resolve();
     } catch (err) {
+      console.log(err.response.data);
       resolve();
     }
   });
