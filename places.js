@@ -1,6 +1,6 @@
 require('dotenv').config();
 const puppeteer = require('puppeteer');
-const { getPlaces, postEvent } = require('./request');
+const { getPlaces, postEvents } = require('./request');
 
 const dev = process.env.DEV;
 
@@ -29,7 +29,7 @@ const dev = process.env.DEV;
     await autoScrollUpcomingEvents(page);
     const events = await retrieveEventsData(page);
     if (events.length > 0) {
-      await postEvent(p.id, events);
+      await postEvents(p.id, events);
     }
   }
 

@@ -2,9 +2,9 @@
   "name": "event-scraper",
   "version": "1.0.0",
   "description": "Event Scraper",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "events": "node events.js",
+    "places": "node places.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
+    "form-data": "^4.0.0",
     "puppeteer": "^14.1.1"
   }
 }
