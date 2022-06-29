@@ -11,8 +11,6 @@ const dev = process.env.DEV;
     return;
   }
 
-  console.log(events);
-
   const browser = await puppeteer.launch({ headless: dev === '0' });
   const page = await browser.newPage();
 
