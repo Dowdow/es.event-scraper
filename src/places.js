@@ -26,8 +26,10 @@ const { getPlaces, postEventsPlace } = require('./request');
 
   for (const p of places) {
     await page.goto(`https://facebook.com/pg/${p.facebookId}/events`);
-    await page.waitForSelector('div[id="upcoming_events_card"]');
-    await page.waitForTimeout(1000);
+    try {
+      await page.waitForSelector('div[id="upcoming_events_card"]', { timeout: 1000 });
+    } catch (err) {
+    }
     await autoScrollUpcomingEvents(page);
     const events = await retrieveEventsData(page);
     if (events.length > 0) {
