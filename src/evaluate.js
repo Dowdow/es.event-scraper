@@ -1,15 +1,6 @@
-async function setPageLanguage(page) {
-  return await page.evaluateOnNewDocument(() => {
-    Object.defineProperty(navigator, 'language', {
-      get: function () {
-        return 'fr-FR';
-      }
-    });
-    Object.defineProperty(navigator, 'languages', {
-      get: function () {
-        return ['fr-FR', 'fr'];
-      }
-    });
+async function setLanguage(page) {
+  return await page.setExtraHTTPHeaders({
+    'Accept-Language': 'fr-FR,fr',
   });
 }
 
@@ -90,7 +81,7 @@ async function autoScrollUpcomingEvents(page) {
 }
 
 module.exports = {
-  setPageLanguage,
+  setLanguage,
   retrieveEventData,
   retrieveEventsData,
   autoScrollUpcomingEvents,

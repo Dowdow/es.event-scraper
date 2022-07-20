@@ -1,6 +1,6 @@
 require('dotenv').config();
 const puppeteer = require('puppeteer');
-const { retrieveEventData, setPageLanguage } = require('./evaluate');
+const { retrieveEventData, setLanguage } = require('./evaluate');
 const { getPuppeteerOptions } = require('./puppeteer');
 const { getEvents, postEvent, postEventImage } = require('./request');
 
@@ -15,7 +15,7 @@ const { getEvents, postEvent, postEventImage } = require('./request');
   const browser = await puppeteer.launch(options);
 
   const page = await browser.newPage();
-  await setPageLanguage(page);
+  await setLanguage(page);
 
   await page.goto(`https://facebook.com`);
 
