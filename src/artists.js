@@ -26,6 +26,7 @@ const { getArtists, postEventsArtist } = require('./request');
 
   for (const a of artists) {
     await page.goto(`https://facebook.com/pg/${a.facebookId}/events`);
+    await page.waitForSelector('div[id="upcoming_events_card"]');
     await page.waitForTimeout(1000);
     await autoScrollUpcomingEvents(page);
     const events = await retrieveEventsData(page);
