@@ -26,6 +26,7 @@ const { getEvents, postEvent, postEventImage } = require('./request');
 
   for (const e of events) {
     await page.goto(`https://facebook.com/events/${e.facebookId}`);
+    await page.waitForSelector('h2 span[class=""]');
     await page.waitForTimeout(1000);
     const { dates, title, image } = await retrieveEventData(page);
     if (dates !== null && title !== null) {
