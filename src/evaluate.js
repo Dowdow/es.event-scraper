@@ -1,38 +1,43 @@
-require('dotenv').config();
-const puppeteer = require('puppeteer');
-const { getPlaces, postEvents } = require('./request');
+async function setPageLanguage(page) {
+  return await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, 'language', {
+      get: function () {
+        return 'fr-FR';
+      }
+    });
+    Object.defineProperty(navigator, 'languages', {
+      get: function () {
+        return ['fr-FR', 'fr'];
+      }
+    });
+  });
+}
 
-const dev = process.env.DEV;
+async function retrieveEventData(page) {
+  return await page.evaluate(async () => {
+    return await new Promise((resolve) => {
+      const data = {
+        dates: null,
+        image: null,
+        title: null,
+      };
+      const datesElement = document.querySelector('span[class*="jdix4yx3"], span[class*="erlsw9ld"]');
+      if (datesElement) {
+        data.dates = datesElement.innerText;
+      }
+      const imageElement = document.querySelector('img[data-imgperflogname]');
+      if (imageElement) {
+        data.image = imageElement.src;
+      }
+      const titleElement = document.querySelector('h2 span[class=""]');
+      if (titleElement) {
+        data.title = titleElement.innerText;
+      }
 
-(async () => {
-  const places = await getPlaces();
-
-  if (places.length === 0) {
-    return;
-  }
-
-  const browser = await puppeteer.launch({ headless: dev === '0' });
-  const page = await browser.newPage();
-
-  await page.goto(`https://facebook.com`);
-
-  const cookieButtonSelector = 'button[data-cookiebanner="accept_only_essential_button"]';
-  await page.waitForSelector(cookieButtonSelector);
-  await page.click(cookieButtonSelector);
-  await page.waitForTimeout(1000);
-
-  for (const p of places) {
-    await page.goto(`https://facebook.com/pg/${p.facebookId}/events`);
-    await page.waitForTimeout(1000);
-    await autoScrollUpcomingEvents(page);
-    const events = await retrieveEventsData(page);
-    if (events.length > 0) {
-      await postEvents(p.id, events);
-    }
-  }
-
-  await browser.close();
-})();
+      resolve(data);
+    });
+  })
+}
 
 async function retrieveEventsData(page) {
   return await page.evaluate(async () => {
@@ -82,4 +87,11 @@ async function autoScrollUpcomingEvents(page) {
       }, 300);
     });
   });
+}
+
+module.exports = {
+  setPageLanguage,
+  retrieveEventData,
+  retrieveEventsData,
+  autoScrollUpcomingEvents,
 }

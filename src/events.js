@@ -1,8 +1,8 @@
 require('dotenv').config();
 const puppeteer = require('puppeteer');
+const { retrieveEventData, setPageLanguage } = require('./evaluate');
+const { getPuppeteerOptions } = require('./puppeteer');
 const { getEvents, postEvent, postEventImage } = require('./request');
-
-const dev = process.env.DEV;
 
 (async () => {
   const events = await getEvents();
@@ -11,8 +11,11 @@ const dev = process.env.DEV;
     return;
   }
 
-  const browser = await puppeteer.launch({ headless: dev === '0' });
+  const options = getPuppeteerOptions();
+  const browser = await puppeteer.launch(options);
+
   const page = await browser.newPage();
+  await setPageLanguage(page);
 
   await page.goto(`https://facebook.com`);
 
@@ -35,29 +38,3 @@ const dev = process.env.DEV;
 
   await browser.close();
 })();
-
-async function retrieveEventData(page) {
-  return await page.evaluate(async () => {
-    return await new Promise((resolve) => {
-      const data = {
-        dates: null,
-        image: null,
-        title: null,
-      };
-      const datesElement = document.querySelector('h2 span[class*="jdix4yx3"], h2 span[class*="erlsw9ld"]');
-      if (datesElement) {
-        data.dates = datesElement.innerText;
-      }
-      const imageElement = document.querySelector('img[data-imgperflogname]');
-      if (imageElement) {
-        data.image = imageElement.src;
-      }
-      const titleElement = document.querySelector('h2 span[class=""]');
-      if (titleElement) {
-        data.title = titleElement.innerText;
-      }
-
-      resolve(data);
-    });
-  })
-}
