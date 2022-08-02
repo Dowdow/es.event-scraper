@@ -6,6 +6,7 @@
     "artists": "node src/artists.js",
     "events": "node src/events.js",
     "places": "node src/places.js",
+    "planners": "node src/planners.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

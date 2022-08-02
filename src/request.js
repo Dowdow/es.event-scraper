@@ -8,10 +8,12 @@ const prod = process.env.PROD === '1';
 const getArtistsUrl = process.env.GET_ARTISTS_URL;
 const getEventsUrl = process.env.GET_EVENTS_URL;
 const getPlacesUrl = process.env.GET_PLACES_URL;
+const getPlannersUrl = process.env.GET_PLANNERS_URL;
 const postEventUrl = process.env.POST_EVENT_URL;
 const postEventImageUrl = process.env.POST_EVENT_IMAGE_URL;
 const postEventsArtistUrl = process.env.POST_EVENTS_ARTIST_URL;
 const postEventsPlaceUrl = process.env.POST_EVENTS_PLACE_URL;
+const postEventsPlannerUrl = process.env.POST_EVENTS_PLANNER_URL;
 
 const apiToken = process.env.API_TOKEN;
 
@@ -61,6 +63,20 @@ async function getPlaces() {
       resolve(response.data.places);
     } catch (err) {
       logger.log('error', `GET Places - ${err.message}`);
+      resolve([]);
+    }
+  });
+}
+
+async function getPlanners() {
+  return new Promise(async (resolve) => {
+    try {
+      const httpsAgent = new https.Agent({ rejectUnauthorized: prod });
+      const response = await axios.get(getPlannersUrl, { httpsAgent, headers: { 'X-AUTH-TOKEN': apiToken } });
+      logger.log('info', `GET Planners - ${response.data.planners.length} planners`);
+      resolve(response.data.planners);
+    } catch (err) {
+      logger.log('error', `GET Planners - ${err.message}`);
       resolve([]);
     }
   });
@@ -127,12 +143,28 @@ async function postEventsPlace(place, events) {
   });
 }
 
+async function postEventsPlanner(planner, events) {
+  return new Promise(async (resolve) => {
+    try {
+      const httpsAgent = new https.Agent({ rejectUnauthorized: prod });
+      const response = await axios.post(postEventsPlannerUrl, { planner, events }, { httpsAgent, headers: { 'X-AUTH-TOKEN': apiToken } });
+      logger.log('info', `POST Events Planner - plannerId:${planner} - ${response.data.added} events added`);
+      resolve();
+    } catch (err) {
+      logger.log('error', `POST Events Planner - ${err.message}`);
+      resolve();
+    }
+  });
+}
+
 module.exports = {
   getArtists,
   getEvents,
   getPlaces,
+  getPlanners,
   postEvent,
   postEventImage,
   postEventsArtist,
   postEventsPlace,
+  postEventsPlanner,
 };
