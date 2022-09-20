@@ -22,7 +22,7 @@ const { getArtists, postEventsArtist } = require('./request');
   const cookieButtonSelector = 'button[data-cookiebanner="accept_only_essential_button"]';
   await page.waitForSelector(cookieButtonSelector);
   await page.click(cookieButtonSelector);
-  await page.waitForTimeout(1000);
+  await new Promise(r =>  setTimeout(r, 1000));
 
   for (const a of artists) {
     await page.goto(`https://facebook.com/pg/${a.facebookId}/events`);

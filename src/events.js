@@ -22,7 +22,7 @@ const { getEvents, postEvent, postEventImage } = require('./request');
   const cookieButtonSelector = 'button[data-cookiebanner="accept_only_essential_button"]';
   await page.waitForSelector(cookieButtonSelector);
   await page.click(cookieButtonSelector);
-  await page.waitForTimeout(1000);
+  await new Promise(r => setTimeout(r, 1000));
 
   for (const e of events) {
     await page.goto(`https://facebook.com/events/${e.facebookId}`);
@@ -30,7 +30,7 @@ const { getEvents, postEvent, postEventImage } = require('./request');
       await page.waitForSelector('h2 span[class=""]', { timeout: 2000 });
     } catch (err) {
     }
-    await page.waitForTimeout(1000);
+    await new Promise(r => setTimeout(r, 1000));
     const { dates, title, image } = await retrieveEventData(page);
     if (dates !== null && title !== null) {
       await postEvent(e.facebookId, dates, title);
