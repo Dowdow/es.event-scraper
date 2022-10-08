@@ -12,7 +12,7 @@ async function retrieveEventData(page) {
         image: null,
         title: null,
       };
-      const datesElement = document.querySelector('div[role="main"] div[class="mfn553m3 th51lws0"] span[class*="elsxfac6"][dir="auto"]');
+      const datesElement = document.querySelector('div[role="main"] span[class*="x1a1m0xk"][dir="auto"]');
       if (datesElement) {
         data.dates = datesElement.innerText;
       }
