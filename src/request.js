@@ -1,5 +1,5 @@
 const https = require('https');
-const axios = require('axios').default;
+const axios = require('axios');
 const FormData = require('form-data');
 const winston = require('winston');
 
